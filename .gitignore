@@ -1,0 +1,48 @@
+# -------------------------------
+# Node / Vite / React 기본
+# -------------------------------
+node_modules/
+dist/
+build/
+.vite/
+.cache/
+*.log
+*.lock
+package-lock.json
+
+# -------------------------------
+# 환경변수 파일
+# -------------------------------
+.env
+.env.*
+!.env.example
+
+# -------------------------------
+# OS / 편집기 관련
+# -------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# VSCode / WebStorm
+.vscode/
+.idea/
+
+# -------------------------------
+# 테스트 / 린트 / 커버리지
+# -------------------------------
+coverage/
+*.tsbuildinfo
+.eslintcache
+
+# -------------------------------
+# 임시 업로드 파일 (이미지 등)
+# -------------------------------
+tmp/
+uploads/
