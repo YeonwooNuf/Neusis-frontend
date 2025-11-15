@@ -1,7 +1,26 @@
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import PageContainer from '../components/PageContainer';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   const userStats = {
     articlesRead: 127,
     favoriteCategories: ['Technology', 'Science', 'Finance'],
@@ -15,13 +34,13 @@ const ProfilePage = () => {
         <div className="profile-header">
           <div className="profile-avatar">
             <div className="avatar-circle">
-              <span className="avatar-initial">JD</span>
+              <span className="avatar-initial">{getInitials(user.nickname)}</span>
             </div>
           </div>
           <div className="profile-info">
-            <h1 className="profile-name">John Doe</h1>
-            <p className="profile-email">john.doe@example.com</p>
-            <p className="profile-role">News Analyst</p>
+            <h1 className="profile-name">{user.nickname}</h1>
+            <p className="profile-email">{user.email}</p>
+            <p className="profile-role">{user.role}</p>
           </div>
         </div>
 

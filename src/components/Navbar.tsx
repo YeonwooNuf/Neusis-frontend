@@ -1,8 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   const isActive = (path: string) => {
     return location.pathname === path ? 'active' : '';
@@ -26,9 +28,20 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="navbar-item">
-            <Link to="/profile" className={`navbar-link ${isActive('/profile')}`}>
-              Profile
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to="/profile" className={`navbar-link ${isActive('/profile')}`}>
+                  Profile
+                </Link>
+                <button onClick={logout} className="navbar-link navbar-logout">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className={`navbar-link ${isActive('/login')}`}>
+                Login
+              </Link>
+            )}
           </li>
         </ul>
       </div>
