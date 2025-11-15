@@ -1,22 +1,14 @@
-# --- build stage ---
-FROM node:20-alpine AS build
+# 개발용 Dockerfile (Vite dev server + Hot Reload)
+FROM node:20-alpine
+
 WORKDIR /app
 
-# 의존성 캐시 최적화
+# 의존성 먼저 설치 (캐시용)
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
-# 소스 복사 & 빌드
-COPY . .
-RUN npm run build
+# 소스코드는 볼륨 마운트로 가져올 거라 COPY 생략 가능
+# COPY . .
 
-# --- runtime stage: nginx로 정적 서빙 ---
-FROM nginx:alpine
-WORKDIR /usr/share/nginx/html
-COPY --from=build /app/dist ./
-
-# SPA history fallback를 위한 커스텀 설정
-RUN rm -f /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
+# Vite dev server 실행 (외부 접속 위해 host/port 지정)
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
