@@ -1,26 +1,57 @@
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import './NewsDetailPage.css';
+import type { ArticleDto } from '../types/article';
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
+
+const categoryLabels: Record<string, string> = {
+  POLITICS: 'Politics',
+  ECONOMY: 'Economy',
+  SOCIETY: 'Society',
+  CULTURE: 'Culture',
+  IT: 'IT',
+  SPORTS: 'Sports',
+  ENTERTAINMENT: 'Entertainment',
+  ETC: 'Etc',
+};
 
 const NewsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const [article, setArticle] = useState<ArticleDto | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const mockNewsDetail = {
-    id: id || '1',
-    title: 'Tech Industry Sees Record Growth in Q4',
-    content: `The technology sector has reported unprecedented growth, with major companies exceeding expectations in the final quarter of the year. This remarkable performance has been attributed to several key factors including increased digital transformation initiatives, strong consumer demand, and innovative product launches.
+  useEffect(() => {
+    if (!id) return;
 
-Leading technology firms have seen their stock prices surge as investors respond positively to the quarterly earnings reports. Industry analysts are noting that this growth pattern represents a significant shift from previous quarters, indicating a robust recovery and sustained momentum.
+    const fetchArticle = async () => {
+      setLoading(true);
+      setError(null);
 
-The data reveals that cloud computing services have been particularly strong, with enterprise adoption rates reaching new heights. Software-as-a-Service (SaaS) companies have also demonstrated exceptional performance, driven by the continued need for remote work solutions and digital collaboration tools.
+      try {
+        const res = await fetch(`${API_BASE_URL}/articles/${id}`, {
+          credentials: 'include',
+        });
 
-Looking ahead, industry experts predict that this growth trajectory will continue into the next fiscal year, with particular strength expected in artificial intelligence, cybersecurity, and sustainable technology solutions. The sector's resilience and adaptability have positioned it well for future challenges and opportunities.`,
-    source: 'Tech News Daily',
-    author: 'Sarah Johnson',
-    publishedAt: '2024-01-15T10:00:00Z',
-    category: 'Technology',
-    tags: ['Technology', 'Business', 'Innovation', 'Growth']
-  };
+        if (!res.ok) {
+          throw new Error('Failed to fetch article detail');
+        }
+
+        const data: ArticleDto = await res.json();
+        setArticle(data);
+      } catch (e) {
+        console.error(e);
+        setError('기사 상세 정보를 불러오지 못했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticle();
+  }, [id]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -29,9 +60,34 @@ Looking ahead, industry experts predict that this growth trajectory will continu
       month: 'long',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
+
+  if (loading) {
+    return (
+      <PageContainer>
+        <div className="news-detail-page">
+          <p>Loading...</p>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  if (error || !article) {
+    return (
+      <PageContainer>
+        <div className="news-detail-page">
+          <Link to="/news" className="back-link">
+            ← Back to News
+          </Link>
+          <p>{error ?? 'Article not found.'}</p>
+        </div>
+      </PageContainer>
+    );
+  }
+
+  const displayDate = article.publishedAt ?? article.createdAt;
 
   return (
     <PageContainer>
@@ -42,28 +98,30 @@ Looking ahead, industry experts predict that this growth trajectory will continu
 
         <article className="news-article">
           <div className="article-header">
-            <span className="article-category">{mockNewsDetail.category}</span>
-            <time className="article-date" dateTime={mockNewsDetail.publishedAt}>
-              {formatDate(mockNewsDetail.publishedAt)}
+            <span className="article-category">
+              {categoryLabels[article.category] ?? article.category}
+            </span>
+            <time className="article-date" dateTime={displayDate}>
+              {formatDate(displayDate)}
             </time>
           </div>
 
-          <h1 className="article-title">{mockNewsDetail.title}</h1>
+          <h1 className="article-title">{article.title}</h1>
 
           <div className="article-meta">
             <div className="article-author">
               <span className="meta-label">Author:</span>
-              <span className="meta-value">{mockNewsDetail.author}</span>
+              <span className="meta-value">{article.author ?? '-'}</span>
             </div>
             <div className="article-source">
               <span className="meta-label">Source:</span>
-              <span className="meta-value">{mockNewsDetail.source}</span>
+              <span className="meta-value">{article.source ?? '-'}</span>
             </div>
           </div>
 
           <div className="article-content">
-            {mockNewsDetail.content.split('\n\n').map((paragraph, index) => (
-              <p key={index} className="article-paragraph">
+            {(article.content ?? '').split('\n\n').map((paragraph, idx) => (
+              <p key={idx} className="article-paragraph">
                 {paragraph}
               </p>
             ))}
@@ -72,11 +130,9 @@ Looking ahead, industry experts predict that this growth trajectory will continu
           <div className="article-tags">
             <span className="tags-label">Tags:</span>
             <div className="tags-list">
-              {mockNewsDetail.tags.map(tag => (
-                <span key={tag} className="tag">
-                  {tag}
-                </span>
-              ))}
+              <span className="tag">
+                {categoryLabels[article.category] ?? article.category}
+              </span>
             </div>
           </div>
         </article>
@@ -86,4 +142,3 @@ Looking ahead, industry experts predict that this growth trajectory will continu
 };
 
 export default NewsDetailPage;
-

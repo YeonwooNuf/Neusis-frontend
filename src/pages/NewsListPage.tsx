@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageContainer from '../components/PageContainer';
 import NewsCard from '../components/NewsCard';
 import './NewsListPage.css';
+import type { ArticleDto, PageResponse, Category, IngestStatus } from '../types/article';
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
 
 interface NewsItem {
   id: string;
@@ -12,105 +16,171 @@ interface NewsItem {
   category: string;
 }
 
+const categoryLabels: Record<string, string> = {
+  POLITICS: 'Politics',
+  ECONOMY: 'Economy',
+  SOCIETY: 'Society',
+  CULTURE: 'Culture',
+  IT: 'IT',
+  SPORTS: 'Sports',
+  ENTERTAINMENT: 'Entertainment',
+  ETC: 'Etc',
+};
+
 const NewsListPage = () => {
   const [filter, setFilter] = useState<string>('all');
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const mockNews: NewsItem[] = [
-    {
-      id: '1',
-      title: 'Tech Industry Sees Record Growth in Q4',
-      summary: 'The technology sector has reported unprecedented growth, with major companies exceeding expectations in the final quarter of the year.',
-      source: 'Tech News Daily',
-      publishedAt: '2024-01-15T10:00:00Z',
-      category: 'Technology'
-    },
-    {
-      id: '2',
-      title: 'Global Climate Summit Reaches Historic Agreement',
-      summary: 'World leaders have reached a consensus on new climate targets, marking a significant milestone in environmental policy.',
-      source: 'Global Times',
-      publishedAt: '2024-01-14T14:30:00Z',
-      category: 'Environment'
-    },
-    {
-      id: '3',
-      title: 'Healthcare Innovation Breakthrough Announced',
-      summary: 'Researchers have developed a new treatment method that shows promising results in clinical trials.',
-      source: 'Medical Journal',
-      publishedAt: '2024-01-13T09:15:00Z',
-      category: 'Health'
-    },
-    {
-      id: '4',
-      title: 'Economic Markets Show Strong Recovery Signs',
-      summary: 'Financial markets are demonstrating resilience with positive indicators across multiple sectors.',
-      source: 'Finance Weekly',
-      publishedAt: '2024-01-12T16:45:00Z',
-      category: 'Finance'
-    },
-    {
-      id: '5',
-      title: 'Space Exploration Mission Launches Successfully',
-      summary: 'The latest space mission has launched without issues, beginning its journey to explore distant planets.',
-      source: 'Space News',
-      publishedAt: '2024-01-11T11:20:00Z',
-      category: 'Science'
-    },
-    {
-      id: '6',
-      title: 'Sports Championship Breaks Viewership Records',
-      summary: 'This year\'s championship event has attracted the largest audience in history, setting new benchmarks.',
-      source: 'Sports Central',
-      publishedAt: '2024-01-10T20:00:00Z',
-      category: 'Sports'
-    }
-  ];
+  // 페이지네이션 기본
+  const [page, setPage] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  const categories = ['all', 'Technology', 'Environment', 'Health', 'Finance', 'Science', 'Sports'];
-  
-  const filteredNews = filter === 'all' 
-    ? mockNews 
-    : mockNews.filter(news => news.category.toLowerCase() === filter.toLowerCase());
+  const categories = ['all', ...Object.keys(categoryLabels)];
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // 분석 전 기사만 보고 싶으면 status=PENDING 추가
+        const params = new URLSearchParams();
+        params.set('page', String(page));
+        params.set('size', '20');
+        // 필요하면 아래 한 줄 활성화
+        // params.set('status', 'PENDING');
+
+        const res = await fetch(
+          `${API_BASE_URL}/articles?${params.toString()}`,
+          { credentials: 'include' },
+        );
+
+        if (!res.ok) {
+          throw new Error('Failed to fetch articles');
+        }
+
+        const pageData: PageResponse<ArticleDto> = await res.json();
+
+        // 여기서 PENDING만 필터링하고 싶으면 이쪽에서
+        const pendingOnly = pageData.content.filter(
+          (a) => a.ingestStatus === 'PENDING',
+        );
+
+        const mapped: NewsItem[] = pendingOnly.map((a) => ({
+          id: String(a.articleId),
+          title: a.title,
+          summary: a.content
+            ? a.content.length > 150
+              ? a.content.slice(0, 150) + '...'
+              : a.content
+            : '',
+          source: a.source ?? 'Unknown',
+          publishedAt: a.publishedAt ?? a.createdAt,
+          category: a.category,
+        }));
+
+        setNews(mapped);
+        setTotalPages(pageData.totalPages);
+      } catch (e) {
+        console.error(e);
+        setError('뉴스 목록을 불러오지 못했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, [page]);
+
+  const filteredNews =
+    filter === 'all'
+      ? news
+      : news.filter(
+          (n) => n.category.toUpperCase() === filter.toUpperCase(),
+        );
 
   return (
     <PageContainer>
       <div className="news-list-page">
         <div className="news-list-header">
           <h1 className="page-title">News Articles</h1>
-          <p className="page-subtitle">Browse and analyze the latest news from around the world</p>
+          <p className="page-subtitle">
+            Browse and analyze articles from your Neusis dataset
+          </p>
         </div>
 
         <div className="news-filters">
-          {categories.map(category => (
+          {categories.map((category) => (
             <button
               key={category}
               className={`filter-btn ${filter === category ? 'active' : ''}`}
               onClick={() => setFilter(category)}
             >
-              {category.charAt(0).toUpperCase() + category.slice(1)}
+              {category === 'all'
+                ? 'All'
+                : categoryLabels[category] ?? category}
             </button>
           ))}
         </div>
 
+        {loading && (
+          <div className="no-results">
+            <p>Loading...</p>
+          </div>
+        )}
+        {error && !loading && (
+          <div className="no-results">
+            <p>{error}</p>
+          </div>
+        )}
+
         <div className="news-grid">
-          {filteredNews.length > 0 ? (
-            filteredNews.map(news => (
+          {!loading && !error && filteredNews.length > 0 ? (
+            filteredNews.map((n) => (
               <NewsCard
-                key={news.id}
-                id={news.id}
-                title={news.title}
-                summary={news.summary}
-                source={news.source}
-                publishedAt={news.publishedAt}
-                category={news.category}
+                key={n.id}
+                id={n.id}
+                title={n.title}
+                summary={n.summary}
+                source={n.source}
+                publishedAt={n.publishedAt}
+                category={categoryLabels[n.category] ?? n.category}
               />
             ))
           ) : (
-            <div className="no-results">
-              <p>No news articles found for this category.</p>
-            </div>
+            !loading &&
+            !error && (
+              <div className="no-results">
+                <p>No news articles found for this category.</p>
+              </div>
+            )
           )}
         </div>
+
+        {/* 심플 페이지네이션 (필요하면) */}
+        {totalPages > 1 && (
+          <div className="pagination">
+            <button
+              disabled={page === 0}
+              onClick={() => setPage((p) => Math.max(p - 1, 0))}
+            >
+              Prev
+            </button>
+            <span>
+              {page + 1} / {totalPages}
+            </span>
+            <button
+              disabled={page + 1 >= totalPages}
+              onClick={() =>
+                setPage((p) => (p + 1 < totalPages ? p + 1 : p))
+              }
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </PageContainer>
   );
