@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import './NewsDetailPage.css';
 import type { ArticleDto, AnalysisDto } from '../types/article';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
@@ -26,10 +27,13 @@ const sentimentLabels: Record<string, string> = {
 
 const NewsDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const { user, isAuthenticated } = useAuth();
+
   const [article, setArticle] = useState<ArticleDto | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 1) 기사 상세 조회
   useEffect(() => {
     if (!id) return;
 
@@ -57,6 +61,30 @@ const NewsDetailPage = () => {
     };
 
     fetchArticle();
+  }, [id]);
+
+  // 2) 조회 기록 + 누적 조회수 증가 API 호출
+  useEffect(() => {
+    // id 또는 user 없으면 호출 X
+    if (!id || !isAuthenticated || !user) return;
+
+    const recordView = async () => {
+      try {
+        await fetch(
+          `${API_BASE_URL}/users/${user.id}/articles/${id}/view`,
+          {
+            method: 'POST',
+            credentials: 'include',
+          },
+        );
+        // 응답 값으로 최신 viewCount를 다시 내려주도록 만들었다면,
+        // 여기서 setArticle((prev) => prev && { ...prev, viewCount: newValue }) 갱신 가능.
+      } catch (e) {
+        console.error('조회 기록 API 호출 실패', e);
+      }
+    };
+
+    recordView();
   }, [id]);
 
   const formatDate = (dateString?: string | null) => {
@@ -117,6 +145,16 @@ const NewsDetailPage = () => {
 
           <h1 className="article-title">{article.title}</h1>
 
+          {/* ✅ 조회 정보 영역 */}
+          <div className="article-views">
+            <div className="article-views-item">
+              <span className="meta-label">누적 조회수</span>
+              <span className="meta-value">
+                {(article.viewCount ?? 0).toLocaleString()}회
+              </span>
+            </div>
+          </div>
+
           <div className="article-meta">
             <div className="article-author">
               <span className="meta-label">Author:</span>
@@ -160,8 +198,8 @@ const NewsDetailPage = () => {
               {article.ingestStatus === 'PENDING'
                 ? '분석 대기중'
                 : article.ingestStatus === 'ANALYZED'
-                ? '분석 완료'
-                : '분석 실패'}
+                  ? '분석 완료'
+                  : '분석 실패'}
             </span>
           </div>
 
@@ -207,11 +245,10 @@ const NewsDetailPage = () => {
                     <div
                       className="trend-score-fill"
                       style={{
-                        width: `${
-                          analysis.trendScore != null
+                        width: `${analysis.trendScore != null
                             ? analysis.trendScore * 100
                             : 0
-                        }%`,
+                          }%`,
                       }}
                     ></div>
                   </div>
