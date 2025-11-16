@@ -299,6 +299,20 @@
   color: var(--text-secondary);
 }
 
+.article-views {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.article-views-item {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .news-detail-page {
