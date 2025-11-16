@@ -1,4 +1,5 @@
-// src/types/article.ts 같이 분리해두면 깔끔
+// src/types/article.ts
+
 export type Category =
   | 'POLITICS'
   | 'ECONOMY'
@@ -11,25 +12,40 @@ export type Category =
 
 export type IngestStatus = 'PENDING' | 'ANALYZED' | 'FAILED';
 
+export type Sentiment = 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
+
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+}
+
+export interface AnalysisDto {
+  resultId: number;
+  articleId: number;
+  summary: string;
+  sentiment: Sentiment;
+  keywords: string[];
+  trendScore: number | null;
+  processedAt: string | null;
+  createdAt: string;
+}
+
 export interface ArticleDto {
   articleId: number;
   title: string;
-  content: string;
+  content: string | null;
   author: string | null;
   source: string | null;
   url: string;
   category: Category;
   publishedAt: string | null;
-  ingestStatus: IngestStatus;
   createdAt: string;
-  updatedAt: string;
-}
-
-// Spring Data Page 응답 형식
-export interface PageResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number; // 현재 페이지 (0-based)
-  size: number;
+  updatedAt: string | null;
+  ingestStatus: IngestStatus;
+  analysis?: AnalysisDto | null;
 }
