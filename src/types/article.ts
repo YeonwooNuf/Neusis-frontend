@@ -1,4 +1,4 @@
-// src/types/article.ts
+// 기사 데이터 타입 명시
 
 export type Category =
   | 'POLITICS'
@@ -46,6 +46,7 @@ export interface ArticleDto {
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string | null;
+  viewCount?: number;
   ingestStatus: IngestStatus;
   analysis?: AnalysisDto | null;
 }
