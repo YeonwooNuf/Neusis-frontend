@@ -33,6 +33,22 @@ const NewsDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // 북마크 상태
+  const [isLiked, setIsLiked] = useState(false);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+
+  const BookmarkIcon = ({ filled }: { filled: boolean }) => (
+    filled ? (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="#f6c343">
+        <path d="M6 2a2 2 0 0 0-2 2v17.586a1 1 0 0 0 1.707.707L12 17.414l6.293 5.879A1 1 0 0 0 20 21.586V4a2 2 0 0 0-2-2H6z" />
+      </svg>
+    ) : (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#777" strokeWidth="2">
+        <path d="M6 2h12a2 2 0 0 1 2 2v17.586a1 1 0 0 1-1.707.707L12 17.414l-6.293 5.879A1 1 0 0 1 4 21.586V4a2 2 0 0 1 2-2z" />
+      </svg>
+    )
+  );
+
   // 1) 기사 상세 조회
   useEffect(() => {
     if (!id) return;
@@ -87,6 +103,66 @@ const NewsDetailPage = () => {
     recordView();
   }, [id]);
 
+  // 3) 초기 좋아요 여부 조회
+  useEffect(() => {
+    if (!id || !isAuthenticated || !user) return;
+
+    const fetchLikeStatus = async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL}/users/${user.id}/articles/${id}/like`,
+          {
+            method: 'GET',
+            credentials: 'include',
+          }
+        );
+
+        if (res.ok) {
+          const liked = await res.json();   // true or false
+          setIsLiked(liked);
+        }
+      } catch (e) {
+        console.error("좋아요 상태 조회 실패", e);
+      }
+    };
+
+    fetchLikeStatus();
+  }, [id, isAuthenticated, user]);
+
+  // 4) 북마크 토글 핸들러
+  const handleToggleBookmark = async () => {
+    if (!id || !isAuthenticated || !user) {
+      // 로그인 안 되어 있으면 지금은 단순 막기
+      alert('로그인 후 북마크를 사용할 수 있습니다.');
+      return;
+    }
+
+    if (bookmarkLoading) return;
+
+    try {
+      setBookmarkLoading(true);
+      const res = await fetch(
+        `${API_BASE_URL}/users/${user.id}/articles/${id}/like`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+
+      if (!res.ok) {
+        throw new Error('Failed to toggle bookmark');
+      }
+
+      // 백엔드에서 true/false 반환
+      const liked: boolean = await res.json();
+      setIsLiked(liked);
+    } catch (e) {
+      console.error('북마크 토글 실패', e);
+    } finally {
+      setBookmarkLoading(false);
+    }
+  };
+
   const formatDate = (dateString?: string | null) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
@@ -138,20 +214,21 @@ const NewsDetailPage = () => {
             <span className="article-category">
               {categoryLabels[article.category] ?? article.category}
             </span>
-            <time className="article-date" dateTime={displayDate}>
-              {formatDate(displayDate)}
-            </time>
-          </div>
 
-          <h1 className="article-title">{article.title}</h1>
+            <div className="article-header-right">
+              <time className="article-date" dateTime={displayDate}>
+                {formatDate(displayDate)}
+              </time>
 
-          {/* ✅ 조회 정보 영역 */}
-          <div className="article-views">
-            <div className="article-views-item">
-              <span className="meta-label">누적 조회수</span>
-              <span className="meta-value">
-                {(article.viewCount ?? 0).toLocaleString()}회
-              </span>
+              {/* 북마크 버튼 */}
+              <button
+                type="button"
+                className={`bookmark-btn ${isLiked ? 'bookmark-btn-active' : ''}`}
+                onClick={handleToggleBookmark}
+                disabled={bookmarkLoading || !isAuthenticated}
+              >
+                <BookmarkIcon filled={isLiked} />
+              </button>
             </div>
           </div>
 
@@ -246,8 +323,8 @@ const NewsDetailPage = () => {
                       className="trend-score-fill"
                       style={{
                         width: `${analysis.trendScore != null
-                            ? analysis.trendScore * 100
-                            : 0
+                          ? analysis.trendScore * 100
+                          : 0
                           }%`,
                       }}
                     ></div>

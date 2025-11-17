@@ -313,6 +313,35 @@
   align-items: center;
 }
 
+/* 헤더 오른쪽(날짜 + 북마크 아이콘) */
+.article-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* 북마크 버튼 */
+.bookmark-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.15s ease-in-out;
+}
+
+.bookmark-btn:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: scale(1.08);
+}
+
+.bookmark-btn-active svg {
+  filter: drop-shadow(0px 0px 3px rgba(255, 200, 0, 0.6));
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
   .news-detail-page {
