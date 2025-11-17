@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PageContainer from '../components/PageContainer';
 import './NewsDetailPage.css';
-import type { ArticleDto, AnalysisDto } from '../types/article';
+import type { ArticleDto } from '../types/article';
+import type { AnalysisDto } from '../types/analysis';
 import { useAuth } from '../contexts/AuthContext';
 
 const API_BASE_URL =

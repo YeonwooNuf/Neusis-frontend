@@ -1,4 +1,4 @@
-// 기사 데이터 타입 명시
+import { AnalysisDto } from "./analysis";
 
 export type Category =
   | 'POLITICS'
@@ -12,8 +12,6 @@ export type Category =
 
 export type IngestStatus = 'PENDING' | 'ANALYZED' | 'FAILED';
 
-export type Sentiment = 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
-
 export interface PageResponse<T> {
   content: T[];
   totalElements: number;
@@ -22,17 +20,6 @@ export interface PageResponse<T> {
   number: number;
   first: boolean;
   last: boolean;
-}
-
-export interface AnalysisDto {
-  resultId: number;
-  articleId: number;
-  summary: string;
-  sentiment: Sentiment;
-  keywords: string[];
-  trendScore: number | null;
-  processedAt: string | null;
-  createdAt: string;
 }
 
 export interface ArticleDto {
