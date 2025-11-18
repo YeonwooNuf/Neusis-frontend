@@ -65,7 +65,7 @@ const NewsListPage = () => {
 
         // 여기서 PENDING만 필터링하고 싶으면 이쪽에서
         const pendingOnly = pageData.content.filter(
-          (a) => a.ingestStatus === 'PENDING',
+          (a) => a.ingestStatus === 'PENDING' || 'ANALYZED',
         );
 
         const mapped: NewsItem[] = pendingOnly.map((a) => ({
@@ -187,4 +187,3 @@ const NewsListPage = () => {
 };
 
 export default NewsListPage;
-
