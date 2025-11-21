@@ -29,6 +29,7 @@ export interface ArticleDto {
   author: string | null;
   source: string | null;
   url: string;
+  imageUrl: string;
   category: Category;
   publishedAt: string | null;
   createdAt: string;
