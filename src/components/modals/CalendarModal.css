@@ -32,11 +32,23 @@
   cursor: pointer;
 }
 
+/* ⭐ 테이블 간격 문제 해결 핵심 */
 .calendar-table {
   width: 100%;
   border-collapse: collapse;
+  border-spacing: 0;
+  table-layout: fixed;   /* ← 7등분 확정 */
   text-align: center;
   margin-bottom: 0.75rem;
+}
+
+/* 셀 크기 균일하게 맞추기 */
+.calendar-table th,
+.calendar-table td {
+  width: 14.285%;  /* 100 / 7 */
+  padding: 0;
+  height: 36px;
+  line-height: 36px;
 }
 
 .calendar-table th {
@@ -47,36 +59,35 @@
 
 /* 요일 헤더 색상 */
 .calendar-table th.sun {
-  color: #e53935; /* 일요일 빨간색 */
+  color: #e53935;
 }
 
 .calendar-table th.sat {
-  color: #1e88e5; /* 토요일 파란색 */
+  color: #1e88e5;
 }
 
 .calendar-day {
-  padding: 0.45rem 0;
   font-size: 0.9rem;
   border-radius: 6px;
 }
 
-/* 일요일 날짜 */
+/* 일요일 */
 .calendar-day.sun {
   color: #e53935;
 }
 
-/* 토요일 날짜 */
+/* 토요일 */
 .calendar-day.sat {
   color: #1e88e5;
 }
 
-/* 공휴일: 항상 빨간색 강조 */
+/* 공휴일: 항상 빨간색 */
 .calendar-day.holiday {
   color: #e53935;
   font-weight: 600;
 }
 
-/* 읽은 날(출석) */
+/* 출석한 날 */
 .calendar-day.read-day {
   background: #1976d2;
   color: #fff;
@@ -117,7 +128,6 @@
   background: #1976d2;
 }
 
-/* 전설에 쓰는 공휴일 표시 */
 .legend-dot.holiday {
   background: #e53935;
 }
