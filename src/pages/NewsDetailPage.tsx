@@ -244,9 +244,29 @@ const NewsDetailPage = () => {
             </div>
           </div>
 
-          <div className="article-content">
+          {article.imageUrl && (
+            <div className="article-image-wrapper">
+              <img
+                src={article.imageUrl}
+                alt={article.title}
+                className="article-image"
+              />
+            </div>
+          )}
+
+          {/* <div className="article-content">
             {(article.content ?? '')
               .split('\n\n')
+              .map((paragraph, idx) => (
+                <p key={idx} className="article-paragraph">
+                  {paragraph}
+                </p>
+              ))}
+          </div> */}
+
+          <div className="article-content">
+            {(article.content ?? '')
+              .split(/\n+/)   // \n 하나 이상을 기준으로 문단 분리
               .map((paragraph, idx) => (
                 <p key={idx} className="article-paragraph">
                   {paragraph}

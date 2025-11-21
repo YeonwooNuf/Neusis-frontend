@@ -313,6 +313,27 @@
   align-items: center;
 }
 
+/* 대표 이미지 영역 */
+.article-image-wrapper {
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background-color: var(--background-light);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 원본 비율 유지 + 폭에 맞춰 확대 */
+.article-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 비율 유지 */
+  max-height: 450px;
+  /* 너무 긴 이미지는 제한 */
+  object-fit: contain;
+  /* 잘리지 않게 전체 보여주기 */
+}
+
 /* 헤더 오른쪽(날짜 + 북마크 아이콘) */
 .article-header-right {
   display: flex;
