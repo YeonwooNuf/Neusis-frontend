@@ -42,13 +42,24 @@ const ProfilePage = () => {
   const favoriteCategories = ['Technology', 'Science', 'Finance'];
 
   // 프로필 통계 API 호출
+  // 프로필 통계 API 호출
   useEffect(() => {
     if (!user) return;
 
     const fetchStats = async () => {
       try {
-        // 1) 좋아요(북마크) 개수
-        // GET /api/users/{userId}/likes/count  -> number 반환 가정
+        // 1) 읽은 기사 수
+        const readRes = await fetch(
+          `${API_BASE_URL}/users/${user.id}/reads/count`,
+          { credentials: 'include' }
+        );
+
+        let articlesRead = 0;
+        if (readRes.ok) {
+          articlesRead = await readRes.json(); // number
+        }
+
+        // 2) 좋아요(북마크) 개수
         const likeRes = await fetch(
           `${API_BASE_URL}/users/${user.id}/likes/count`,
           { credentials: 'include' },
@@ -59,11 +70,11 @@ const ProfilePage = () => {
           savedArticles = await likeRes.json(); // number
         }
 
-        // 2) 추후 articlesRead, readingTime 도 API 붙이면 여기에서 함께 세팅
+        // 3) 통계 상태 갱신
         setStats({
-          articlesRead: 0,     // TODO: 읽은 기사 수 API 만들면 교체
-          savedArticles,       // 백엔드에서 가져온 좋아요 수
-          readingTime: '-',    // TODO: 읽은 시간 계산 붙이면 교체
+          articlesRead,        // ← 읽은 기사 수
+          savedArticles,       // ← 좋아요 개수
+          readingTime: '-',    // 나중에 붙일 예정
         });
       } catch (e) {
         console.error('프로필 통계 조회 실패', e);
