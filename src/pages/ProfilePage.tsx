@@ -139,11 +139,11 @@ const ProfilePage = () => {
           <div className="profile-stats">
             <div className="stat-card">
               <div className="stat-value">-</div>
-              <div className="stat-label">Articles Read</div>
+              <div className="stat-label">읽은 기사 수</div>
             </div>
             <div className="stat-card">
               <div className="stat-value">-</div>
-              <div className="stat-label">Saved Articles</div>
+              <div className="stat-label">저장한 기사 수</div>
             </div>
             {/* 연속 출석 + 클릭 시 달력 모달 */}
             <div
@@ -151,7 +151,7 @@ const ProfilePage = () => {
               onClick={() => setShowCalendar(true)}
             >
               <div className="stat-value">{stats.streakDays}</div>
-              <div className="stat-label">Reading Streak (days)</div>
+              <div className="stat-label">연속 출석 일수</div>
             </div>
           </div>
         </div>
@@ -189,11 +189,11 @@ const ProfilePage = () => {
         <div className="profile-stats">
           <div className="stat-card">
             <div className="stat-value">{stats.articlesRead}</div>
-            <div className="stat-label">Articles Read</div>
+            <div className="stat-label">읽은 기사 수</div>
           </div>
           <div className="stat-card">
             <div className="stat-value">{stats.savedArticles}</div>
-            <div className="stat-label">Saved Articles</div>
+            <div className="stat-label">저장한 기사 수</div>
           </div>
           {/* 연속 출석 + 클릭 시 달력 모달 */}
           <div
@@ -201,7 +201,7 @@ const ProfilePage = () => {
             onClick={() => setShowCalendar(true)}
           >
             <div className="stat-value">{stats.streakDays}</div>
-            <div className="stat-label">Reading Streak (days)</div>
+            <div className="stat-label">연속 출석 일수</div>
           </div>
         </div>
 

@@ -141,10 +141,10 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ readDates, onClose }) => 
 
                 <div className="calendar-footer">
                     <span className="legend">
-                        <span className="legend-dot attended" /> Attended
+                        <span className="legend-dot attended" /> 출석
                     </span>
                     <span className="legend">
-                        <span className="legend-dot holiday" /> Holiday
+                        <span className="legend-dot holiday" /> 공휴일
                     </span>
                     <button className="calendar-close-btn" onClick={onClose}>
                         Close
