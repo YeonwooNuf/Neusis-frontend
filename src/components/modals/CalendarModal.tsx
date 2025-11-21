@@ -7,7 +7,7 @@ interface CalendarModalProps {
 }
 
 const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
+    import.meta.env.VITE_API_BASE_URL;
 
 const CalendarModal: React.FC<CalendarModalProps> = ({ readDates, onClose }) => {
     const [current, setCurrent] = useState(new Date());
@@ -90,8 +90,27 @@ const CalendarModal: React.FC<CalendarModalProps> = ({ readDates, onClose }) => 
         }
     }
 
+    // 마지막 주에 날짜가 끝나고 남은 칸들 채우기
     if (cells.length > 0) {
+        while (cells.length < 7) {
+            cells.push(<td key={`tail-empty-${cells.length}`} />);
+        }
         rows.push(<tr key="row-last">{cells}</tr>);
+    }
+
+    // 항상 6주(6행)로 맞추기 위해 빈 행 추가
+    while (rows.length < 6) {
+        const emptyRow: React.ReactNode[] = [];
+        for (let i = 0; i < 7; i++) {
+            emptyRow.push(
+                <td key={`pad-${rows.length}-${i}`} className="calendar-day" />,
+            );
+        }
+        rows.push(
+            <tr key={`pad-row-${rows.length}`}>
+                {emptyRow}
+            </tr>,
+        );
     }
 
     return (
