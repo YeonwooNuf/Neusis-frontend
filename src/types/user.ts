@@ -1,7 +1,7 @@
 export interface UserStats {
   articlesRead: number;    
   savedArticles: number;    
-  readingTime: string;      
+  streakDays: number;    
 }
 
 export interface UserInfo {
