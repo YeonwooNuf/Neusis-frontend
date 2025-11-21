@@ -48,7 +48,7 @@ const NewsListPage = () => {
         // 분석 전 기사만 보고 싶으면 status=PENDING 추가
         const params = new URLSearchParams();
         params.set('page', String(page));
-        params.set('size', '20');
+        params.set('size', '15');
         // 필요하면 아래 한 줄 활성화
         // params.set('status', 'PENDING');
 
@@ -98,8 +98,8 @@ const NewsListPage = () => {
     filter === 'all'
       ? news
       : news.filter(
-          (n) => n.category.toUpperCase() === filter.toUpperCase(),
-        );
+        (n) => n.category.toUpperCase() === filter.toUpperCase(),
+      );
 
   return (
     <PageContainer>
@@ -159,20 +159,34 @@ const NewsListPage = () => {
           )}
         </div>
 
-        {/* 심플 페이지네이션 (필요하면) */}
         {totalPages > 1 && (
           <div className="pagination">
+            {/* Prev 버튼 */}
             <button
+              className="page-btn"
               disabled={page === 0}
               onClick={() => setPage((p) => Math.max(p - 1, 0))}
             >
               Prev
             </button>
-            <span>
-              {page + 1} / {totalPages}
-            </span>
+
+            {/* 페이지 숫자들 */}
+            <div className="page-numbers">
+              {Array.from({ length: totalPages }, (_, i) => i).map((num) => (
+                <button
+                  key={num}
+                  className={`page-number-btn ${num === page ? 'active' : ''}`}
+                  onClick={() => setPage(num)}
+                >
+                  {num + 1}
+                </button>
+              ))}
+            </div>
+
+            {/* Next 버튼 */}
             <button
-              disabled={page + 1 >= totalPages}
+              className="page-btn"
+              disabled={page >= totalPages - 1}
               onClick={() =>
                 setPage((p) => (p + 1 < totalPages ? p + 1 : p))
               }

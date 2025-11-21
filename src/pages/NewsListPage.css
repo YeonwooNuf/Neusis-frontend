@@ -61,6 +61,63 @@
   color: var(--text-secondary);
 }
 
+/* ====== Pagination ====== */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2.5rem 0;
+}
+
+.page-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  background: var(--background);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.15s ease-in-out;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.page-number-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--background);
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.15s ease-in-out;
+}
+
+.page-number-btn:hover {
+  background: var(--background-light);
+}
+
+.page-number-btn.active {
+  background: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
   .page-title {
     font-size: 2rem;
@@ -99,4 +156,3 @@
     margin-bottom: 1.5rem;
   }
 }
-
