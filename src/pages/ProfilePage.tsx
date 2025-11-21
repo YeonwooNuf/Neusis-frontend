@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserStats } from '../types/user';
 import PageContainer from '../components/PageContainer';
+import CalendarModal from '../components/modals/CalendarModal';
 import './ProfilePage.css';
 
 const API_BASE_URL =
@@ -18,8 +19,13 @@ const ProfilePage = () => {
   const [stats, setStats] = useState<UserStats>({
     articlesRead: 0,   // TODO: 읽은 기사 수 API 붙이면 교체
     savedArticles: 0,  // 좋아요(북마크) 수
-    readingTime: '-',  // TODO: 읽은 시간 계산 붙이면 교체
+    streakDays: 0,  // TODO: 읽은 시간 계산 붙이면 교체
   });
+
+  // 출석 날짜 + 모달 오픈 여부
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [readDates, setReadDates] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   // 유저가 없으면 로그인 페이지로 이동
@@ -42,7 +48,6 @@ const ProfilePage = () => {
   const favoriteCategories = ['Technology', 'Science', 'Finance'];
 
   // 프로필 통계 API 호출
-  // 프로필 통계 API 호출
   useEffect(() => {
     if (!user) return;
 
@@ -56,7 +61,7 @@ const ProfilePage = () => {
 
         let articlesRead = 0;
         if (readRes.ok) {
-          articlesRead = await readRes.json(); // number
+          articlesRead = await readRes.json();
         }
 
         // 2) 좋아요(북마크) 개수
@@ -67,14 +72,35 @@ const ProfilePage = () => {
 
         let savedArticles = 0;
         if (likeRes.ok) {
-          savedArticles = await likeRes.json(); // number
+          savedArticles = await likeRes.json();
         }
 
-        // 3) 통계 상태 갱신
+        // 3) 연속 출석 일수
+        const streakRes = await fetch(
+          `${API_BASE_URL}/users/${user.id}/reads/streak?days=30`,
+          { credentials: 'include' }
+        );
+
+        let streakDays = 0;
+        if (streakRes.ok) {
+          streakDays = await streakRes.json();
+        }
+
+        // 4) 출석한 날짜 목록 (달력용)
+        const datesRes = await fetch(
+          `${API_BASE_URL}/users/${user.id}/reads/dates/all`,
+          { credentials: 'include' }
+        );
+
+        if (datesRes.ok) {
+          const dates: string[] = await datesRes.json(); // ["2025-02-01", ...]
+          setReadDates(dates);
+        }
+
         setStats({
-          articlesRead,        // ← 읽은 기사 수
-          savedArticles,       // ← 좋아요 개수
-          readingTime: '-',    // 나중에 붙일 예정
+          articlesRead,
+          savedArticles,
+          streakDays,
         });
       } catch (e) {
         console.error('프로필 통계 조회 실패', e);
@@ -119,12 +145,23 @@ const ProfilePage = () => {
               <div className="stat-value">-</div>
               <div className="stat-label">Saved Articles</div>
             </div>
-            <div className="stat-card">
-              <div className="stat-value">-</div>
-              <div className="stat-label">Total Reading Time</div>
+            {/* 연속 출석 + 클릭 시 달력 모달 */}
+            <div
+              className="stat-card clickable"
+              onClick={() => setShowCalendar(true)}
+            >
+              <div className="stat-value">{stats.streakDays}</div>
+              <div className="stat-label">Reading Streak (days)</div>
             </div>
           </div>
         </div>
+
+        {showCalendar && (
+          <CalendarModal
+            readDates={readDates}
+            onClose={() => setShowCalendar(false)}
+          />
+        )}
       </PageContainer>
     );
   }
@@ -158,9 +195,13 @@ const ProfilePage = () => {
             <div className="stat-value">{stats.savedArticles}</div>
             <div className="stat-label">Saved Articles</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.readingTime}</div>
-            <div className="stat-label">Total Reading Time</div>
+          {/* 연속 출석 + 클릭 시 달력 모달 */}
+          <div
+            className="stat-card clickable"
+            onClick={() => setShowCalendar(true)}
+          >
+            <div className="stat-value">{stats.streakDays}</div>
+            <div className="stat-label">Reading Streak (days)</div>
           </div>
         </div>
 
@@ -246,6 +287,13 @@ const ProfilePage = () => {
           </section>
         </div>
       </div>
+
+      {showCalendar && (
+        <CalendarModal
+          readDates={readDates}
+          onClose={() => setShowCalendar(false)}
+        />
+      )}
     </PageContainer>
   );
 };
