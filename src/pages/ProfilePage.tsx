@@ -17,9 +17,9 @@ const ProfilePage = () => {
 
   // 통계 정보 상태
   const [stats, setStats] = useState<UserStats>({
-    articlesRead: 0,   // TODO: 읽은 기사 수 API 붙이면 교체
+    articlesRead: 0,   // 조회한 기사 수
     savedArticles: 0,  // 좋아요(북마크) 수
-    streakDays: 0,  // TODO: 읽은 시간 계산 붙이면 교체
+    streakDays: 0,  // 연속 출석일 수
   });
 
   // 출석 날짜 + 모달 오픈 여부
