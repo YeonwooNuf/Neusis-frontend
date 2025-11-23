@@ -6,6 +6,7 @@ import NewsDetailPage from './pages/NewsDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import SavedArticlesPage from './pages/SavedArticlesPage';
 import './App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/saved-articles" element={<SavedArticlesPage />} />
         </Routes>
       </main>
     </div>
