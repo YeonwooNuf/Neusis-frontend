@@ -22,6 +22,11 @@ const ProfilePage = () => {
     streakDays: 0,  // 연속 출석일 수
   });
 
+  // 저장한 기사 목록 페이지로 이동
+  const handleSavedArticlesClick = () => {
+    navigate('/saved-articles');
+  };
+
   // 출석 날짜 + 모달 오픈 여부
   const [showCalendar, setShowCalendar] = useState(false);
   const [readDates, setReadDates] = useState<string[]>([]);
@@ -141,7 +146,11 @@ const ProfilePage = () => {
               <div className="stat-value">-</div>
               <div className="stat-label">읽은 기사 수</div>
             </div>
-            <div className="stat-card">
+            {/* 저장한 기사 수 → 클릭 시 이동 */}
+            <div
+              className="stat-card clickable"
+              onClick={handleSavedArticlesClick}
+            >
               <div className="stat-value">-</div>
               <div className="stat-label">저장한 기사 수</div>
             </div>
@@ -191,7 +200,11 @@ const ProfilePage = () => {
             <div className="stat-value">{stats.articlesRead}</div>
             <div className="stat-label">읽은 기사 수</div>
           </div>
-          <div className="stat-card">
+          {/* 저장한 기사 수 → 클릭 시 이동 */}
+          <div
+            className="stat-card clickable"
+            onClick={handleSavedArticlesClick}
+          >
             <div className="stat-value">{stats.savedArticles}</div>
             <div className="stat-label">저장한 기사 수</div>
           </div>
