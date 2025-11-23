@@ -22,7 +22,6 @@ const SavedArticlesPage = () => {
 
     const fetchSavedArticles = async () => {
       try {
-        // ⚠️ 실제 백엔드 엔드포인트에 맞게 수정
         const res = await fetch(
           `${API_BASE_URL}/users/${user.id}/likes/articles`,
           { credentials: 'include' }
@@ -32,12 +31,7 @@ const SavedArticlesPage = () => {
           throw new Error('저장한 기사 목록 조회 실패');
         }
 
-        // 단순 배열인 경우
         const data: ArticleDto[] = await res.json();
-
-        // PageResponse<ArticleDto> 형태인 경우라면:
-        // const page: PageResponse<ArticleDto> = await res.json();
-        // setArticles(page.content);
 
         setArticles(data);
       } catch (e) {
@@ -104,6 +98,7 @@ const SavedArticlesPage = () => {
                         {article.publishedAt}
                       </span>
                     )}
+                    {/* 원문 링크로 이동 */}
                     <a
                       href={article.url}
                       target="_blank"
