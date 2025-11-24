@@ -71,27 +71,21 @@ const NewsDetailPage = () => {
 
   // 2) 조회 기록 + 누적 조회수 증가 API 호출
   useEffect(() => {
-    // id 또는 user 없으면 호출 X
     if (!id || !isAuthenticated || !user) return;
 
     const recordView = async () => {
       try {
-        await fetch(
-          `${API_BASE_URL}/users/${user.id}/articles/${id}/view`,
-          {
-            method: 'POST',
-            credentials: 'include',
-          },
-        );
-        // 응답 값으로 최신 viewCount를 다시 내려주도록 만들었다면,
-        // 여기서 setArticle((prev) => prev && { ...prev, viewCount: newValue }) 갱신 가능.
+        await fetch(`${API_BASE_URL}/users/${user.id}/articles/${id}/view`, {
+          method: 'POST',
+          credentials: 'include',
+        });
       } catch (e) {
         console.error('조회 기록 API 호출 실패', e);
       }
     };
 
     recordView();
-  }, [id]);
+  }, [id, isAuthenticated, user]);
 
   // 3) 초기 좋아요 여부 조회
   useEffect(() => {
@@ -104,15 +98,15 @@ const NewsDetailPage = () => {
           {
             method: 'GET',
             credentials: 'include',
-          }
+          },
         );
 
         if (res.ok) {
-          const liked = await res.json();   // true or false
+          const liked = await res.json(); // true or false
           setIsLiked(liked);
         }
       } catch (e) {
-        console.error("좋아요 상태 조회 실패", e);
+        console.error('좋아요 상태 조회 실패', e);
       }
     };
 
@@ -122,7 +116,6 @@ const NewsDetailPage = () => {
   // 4) 북마크 토글 핸들러
   const handleToggleBookmark = async () => {
     if (!id || !isAuthenticated || !user) {
-      // 로그인 안 되어 있으면 지금은 단순 막기
       alert('로그인 후 북마크를 사용할 수 있습니다.');
       return;
     }
@@ -143,7 +136,6 @@ const NewsDetailPage = () => {
         throw new Error('Failed to toggle bookmark');
       }
 
-      // 백엔드에서 true/false 반환
       const liked: boolean = await res.json();
       setIsLiked(liked);
     } catch (e) {
@@ -200,37 +192,53 @@ const NewsDetailPage = () => {
 
         {/* ========== 기사 원문 ========== */}
         <article className="news-article">
+          {/* 헤더 */}
           <div className="article-header">
             <span className="article-category">
               {categoryLabels[article.category] ?? article.category}
             </span>
 
             <div className="article-header-right">
-              <time className="article-date" dateTime={displayDate}>
-                {formatDate(displayDate)}
-              </time>
+              <div className="right-top-row">
+                <time className="article-date" dateTime={displayDate}>
+                  {formatDate(displayDate)}
+                </time>
 
-              {/* 북마크 버튼 */}
-              <button
-                type="button"
-                className={`bookmark-btn ${isLiked ? 'bookmark-btn-active' : ''}`}
-                onClick={handleToggleBookmark}
-                disabled={bookmarkLoading || !isAuthenticated}
-              >
-                <BookmarkIcon filled={isLiked} />
-              </button>
+                <button
+                  type="button"
+                  className={`bookmark-btn ${isLiked ? 'bookmark-btn-active' : ''}`}
+                  onClick={handleToggleBookmark}
+                  disabled={bookmarkLoading || !isAuthenticated}
+                >
+                  <BookmarkIcon filled={isLiked} />
+                </button>
+              </div>
             </div>
           </div>
 
-          <div className="article-meta">
-            <div className="article-author">
-              <span className="meta-label">Author:</span>
-              <span className="meta-value">{article.author ?? '-'}</span>
+          {/* 메타 + 원문 보기 한 줄로 */}
+          <div className="article-meta-row">
+            <div className="article-meta">
+              <div className="article-author">
+                <span className="meta-label">Author:</span>
+                <span className="meta-value">{article.author ?? '-'}</span>
+              </div>
+              <div className="article-source">
+                <span className="meta-label">Source:</span>
+                <span className="meta-value">{article.source ?? '-'}</span>
+              </div>
             </div>
-            <div className="article-source">
-              <span className="meta-label">Source:</span>
-              <span className="meta-value">{article.source ?? '-'}</span>
-            </div>
+
+            {article.url && (
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noreferrer"
+                className="article-original-link"
+              >
+                원문 보기 →
+              </a>
+            )}
           </div>
 
           {article.imageUrl && (
@@ -243,19 +251,9 @@ const NewsDetailPage = () => {
             </div>
           )}
 
-          {/* <div className="article-content">
-            {(article.content ?? '')
-              .split('\n\n')
-              .map((paragraph, idx) => (
-                <p key={idx} className="article-paragraph">
-                  {paragraph}
-                </p>
-              ))}
-          </div> */}
-
           <div className="article-content">
             {(article.content ?? '')
-              .split(/\n+/)   // \n 하나 이상을 기준으로 문단 분리
+              .split(/\n+/)
               .map((paragraph, idx) => (
                 <p key={idx} className="article-paragraph">
                   {paragraph}
@@ -292,7 +290,6 @@ const NewsDetailPage = () => {
 
           {analysis ? (
             <>
-              {/* 요약 */}
               <div className="analysis-summary">
                 <h3 className="analysis-subtitle">요약</h3>
                 <p className="analysis-summary-text">
@@ -300,7 +297,6 @@ const NewsDetailPage = () => {
                 </p>
               </div>
 
-              {/* 감정 + 트렌드 */}
               <div className="analysis-metrics">
                 <div className="analysis-metric">
                   <div className="metric-header">
@@ -342,7 +338,6 @@ const NewsDetailPage = () => {
                 </div>
               </div>
 
-              {/* 키워드 */}
               <div className="analysis-keywords">
                 <h3 className="analysis-subtitle">주요 키워드</h3>
                 <div className="keywords-list">
@@ -360,7 +355,6 @@ const NewsDetailPage = () => {
                 </div>
               </div>
 
-              {/* 분석 완료 시각 */}
               <div className="analysis-footer">
                 <span className="analysis-processed-time">
                   분석 완료: {formatDate(analysis.processedAt)}
