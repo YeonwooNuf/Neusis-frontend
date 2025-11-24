@@ -5,6 +5,7 @@ import './NewsDetailPage.css';
 import type { ArticleDto } from '../types/article';
 import type { AnalysisDto } from '../types/analysis';
 import { useAuth } from '../contexts/AuthContext';
+import BookmarkIcon from '../components/BookmarkIcon';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
@@ -37,18 +38,6 @@ const NewsDetailPage = () => {
   // 북마크 상태
   const [isLiked, setIsLiked] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
-
-  const BookmarkIcon = ({ filled }: { filled: boolean }) => (
-    filled ? (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="#f6c343">
-        <path d="M6 2a2 2 0 0 0-2 2v17.586a1 1 0 0 0 1.707.707L12 17.414l6.293 5.879A1 1 0 0 0 20 21.586V4a2 2 0 0 0-2-2H6z" />
-      </svg>
-    ) : (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#777" strokeWidth="2">
-        <path d="M6 2h12a2 2 0 0 1 2 2v17.586a1 1 0 0 1-1.707.707L12 17.414l-6.293 5.879A1 1 0 0 1 4 21.586V4a2 2 0 0 1 2-2z" />
-      </svg>
-    )
-  );
 
   // 1) 기사 상세 조회
   useEffect(() => {
