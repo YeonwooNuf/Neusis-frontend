@@ -49,8 +49,8 @@ const ProfilePage = () => {
       .slice(0, 2);
   };
 
-  // 임시 즐겨찾는 카테고리 (나중에 API 붙일 수 있음)
-  const favoriteCategories = ['Technology', 'Science', 'Finance'];
+  // 즐겨찾는 카테고리 상태값
+  const [favoriteCategories, setFavoriteCategories] = useState<string[]>([]);
 
   // 프로필 통계 API 호출
   useEffect(() => {
@@ -100,6 +100,20 @@ const ProfilePage = () => {
         if (datesRes.ok) {
           const dates: string[] = await datesRes.json(); // ["2025-02-01", ...]
           setReadDates(dates);
+        }
+
+        // 5) 많이 읽은 카테고리 Top 3
+        // 백엔드에서 string[] 형태로 내려온다고 가정: ["Technology", "Science", "Finance"]
+        const favRes = await fetch(
+          `${API_BASE_URL}/users/${user.id}/reads/top-categories?limit=3`,
+          { credentials: 'include' }
+        );
+
+        if (favRes.ok) {
+          const categories: string[] = await favRes.json();
+          setFavoriteCategories(categories);
+        } else {
+          setFavoriteCategories([]); // 실패 시 빈 배열
         }
 
         setStats({
@@ -224,11 +238,15 @@ const ProfilePage = () => {
           <section className="profile-section">
             <h2 className="section-title">Favorite Categories</h2>
             <div className="categories-list">
-              {favoriteCategories.map((category, index) => (
-                <div key={index} className="category-badge">
-                  {category}
-                </div>
-              ))}
+              {favoriteCategories.length === 0 ? (
+                <p className="empty-text">아직 통계가 없어요.</p>
+              ) : (
+                favoriteCategories.map((category, index) => (
+                  <div key={index} className="category-badge">
+                    {category}
+                  </div>
+                ))
+              )}
             </div>
           </section>
 
