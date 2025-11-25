@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PageContainer from '../components/PageContainer';
 import NewsCard from '../components/NewsCard';
 import './NewsListPage.css';
-import type { ArticleDto, PageResponse, Category, IngestStatus } from '../types/article';
+import type { ArticleDto, PageResponse } from '../types/article';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
@@ -43,12 +43,16 @@ const NewsListPage = () => {
       setError(null);
 
       try {
-        // 분석 전 기사만 보고 싶으면 status=PENDING 추가
         const params = new URLSearchParams();
         params.set('page', String(page));
         params.set('size', '15');
-        // 필요하면 아래 한 줄 활성화
+        // 필요하면 분석 상태 필터 추가
         // params.set('status', 'PENDING');
+
+        // 필터가 all이 아닐 때만 카테고리 파라미터 추가
+        if (filter !== 'all') {
+          params.set('category', filter); // 백엔드 enum 이름과 동일하다고 가정
+        }
 
         const res = await fetch(
           `${API_BASE_URL}/articles?${params.toString()}`,
@@ -61,12 +65,14 @@ const NewsListPage = () => {
 
         const pageData: PageResponse<ArticleDto> = await res.json();
 
-        // 여기서 PENDING만 필터링하고 싶으면 이쪽에서
-        const pendingOnly = pageData.content.filter(
-          (a) => a.ingestStatus === 'PENDING' || 'ANALYZED',
-        );
+        // ingestStatus로 추가 필터링이 필요 없다면 그대로 사용
+        const filteredByStatus = pageData.content;
+        // 만약 PENDING / ANALYZED만 보고싶으면 아래처럼:
+        // const filteredByStatus = pageData.content.filter(
+        //   (a) => a.ingestStatus === 'PENDING' || a.ingestStatus === 'ANALYZED',
+        // );
 
-        const mapped: NewsItem[] = pendingOnly.map((a) => ({
+        const mapped: NewsItem[] = filteredByStatus.map((a) => ({
           id: String(a.articleId),
           title: a.title,
           summary: a.content
@@ -80,7 +86,7 @@ const NewsListPage = () => {
         }));
 
         setNews(mapped);
-        setTotalPages(pageData.totalPages);
+        setTotalPages(pageData.totalPages); // 이 값이 이제 카테고리 기준 totalPages
       } catch (e) {
         console.error(e);
         setError('뉴스 목록을 불러오지 못했습니다.');
@@ -90,14 +96,10 @@ const NewsListPage = () => {
     };
 
     fetchArticles();
-  }, [page]);
+  }, [page, filter]); // 필터 바뀔 때마다 다시 요청
 
-  const filteredNews =
-    filter === 'all'
-      ? news
-      : news.filter(
-        (n) => n.category.toUpperCase() === filter.toUpperCase(),
-      );
+  // 서버에서 이미 카테고리 기준으로 내려주므로 추가 필터링 불필요
+  const filteredNews = news;
 
   return (
     <PageContainer>
@@ -114,7 +116,10 @@ const NewsListPage = () => {
             <button
               key={category}
               className={`filter-btn ${filter === category ? 'active' : ''}`}
-              onClick={() => setFilter(category)}
+              onClick={() => {
+                setFilter(category);
+                setPage(0); // 카테고리 바뀔 때 첫 페이지로 이동
+              }}
             >
               {category === 'all'
                 ? 'All'
