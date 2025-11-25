@@ -21,10 +21,8 @@ const categoryLabels: Record<string, string> = {
   ECONOMY: 'Economy',
   SOCIETY: 'Society',
   CULTURE: 'Culture',
+  WORLD: 'World',
   IT: 'IT',
-  SPORTS: 'Sports',
-  ENTERTAINMENT: 'Entertainment',
-  ETC: 'Etc',
 };
 
 const NewsListPage = () => {
