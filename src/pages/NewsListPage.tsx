@@ -3,6 +3,7 @@ import PageContainer from '../components/PageContainer';
 import NewsCard from '../components/NewsCard';
 import './NewsListPage.css';
 import type { ArticleDto, PageResponse } from '../types/article';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api';
@@ -26,6 +27,8 @@ const categoryLabels: Record<string, string> = {
 };
 
 const NewsListPage = () => {
+  const { user } = useAuth();
+
   const [filter, setFilter] = useState<string>('all');
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -36,6 +39,13 @@ const NewsListPage = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const categories = ['all', ...Object.keys(categoryLabels)];
+
+  // 날짜 필터 상태
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
+
+  // 검색어 상태
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -49,9 +59,25 @@ const NewsListPage = () => {
         // 필요하면 분석 상태 필터 추가
         // params.set('status', 'PENDING');
 
+        // 로그인한 유저 id 전달 (읽음/좋아요 플래그 계산용)
+        if (user?.id != null) {
+          params.set('userId', String(user.id));
+        }
+
         // 필터가 all이 아닐 때만 카테고리 파라미터 추가
         if (filter !== 'all') {
           params.set('category', filter); // 백엔드 enum 이름과 동일하다고 가정
+        }
+
+        if (fromDate) {
+          params.set('from', `${fromDate}T00:00:00`);
+        }
+        if (toDate) {
+          params.set('to', `${toDate}T23:59:59`);
+        }
+
+        if (search.trim() !== '') {
+          params.set('search', search.trim());
         }
 
         const res = await fetch(
@@ -96,7 +122,7 @@ const NewsListPage = () => {
     };
 
     fetchArticles();
-  }, [page, filter]); // 필터 바뀔 때마다 다시 요청
+  }, [page, filter, user?.id, fromDate, toDate, search]); // 필터, 페이지, 유저 변경 시 다시 요청
 
   // 서버에서 이미 카테고리 기준으로 내려주므로 추가 필터링 불필요
   const filteredNews = news;
@@ -109,6 +135,39 @@ const NewsListPage = () => {
           <p className="page-subtitle">
             Browse and analyze articles from your Neusis dataset
           </p>
+        </div>
+
+        <div className="news-search-area">
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Search by title..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
+          />
+
+          <div className="date-filters">
+            <input
+              type="date"
+              value={fromDate}
+              onChange={(e) => {
+                setFromDate(e.target.value);
+                setPage(0);
+              }}
+            />
+            <span>~</span>
+            <input
+              type="date"
+              value={toDate}
+              onChange={(e) => {
+                setToDate(e.target.value);
+                setPage(0);
+              }}
+            />
+          </div>
         </div>
 
         <div className="news-filters">

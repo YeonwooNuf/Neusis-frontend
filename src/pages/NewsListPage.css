@@ -118,6 +118,35 @@
   border-color: var(--primary-color);
 }
 
+.news-search-area {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 220px;
+}
+
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-filters input[type="date"] {
+  padding: 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
 @media (max-width: 768px) {
   .page-title {
     font-size: 2rem;
