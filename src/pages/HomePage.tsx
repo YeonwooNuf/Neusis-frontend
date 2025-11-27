@@ -1,5 +1,11 @@
 import PageContainer from '../components/PageContainer';
 import './HomePage.css';
+import {
+  FiBarChart2,
+  FiSearch,
+  FiTrendingUp,
+  FiBell,
+} from 'react-icons/fi';
 
 const HomePage = () => {
   return (
@@ -24,28 +30,39 @@ const HomePage = () => {
           <h2 className="section-title">주요 기능</h2>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">📊</div>
+              <div className="feature-icon feature-icon--blue">
+                <FiBarChart2 className="feature-icon-svg" />
+              </div>
               <h3 className="feature-title">분석 대시보드</h3>
               <p className="feature-description">
                 뉴스 동향을 추적하고 시각화된 데이터로 패턴을 분석할 수 있습니다
               </p>
             </div>
+
             <div className="feature-card">
-              <div className="feature-icon">🔍</div>
+              <div className="feature-icon feature-icon--purple">
+                <FiSearch className="feature-icon-svg" />
+              </div>
               <h3 className="feature-title">스마트 검색</h3>
               <p className="feature-description">
                 고급 필터링과 검색 기능으로 원하는 뉴스를 빠르게 찾을 수 있습니다
               </p>
             </div>
+
             <div className="feature-card">
-              <div className="feature-icon">📈</div>
+              <div className="feature-icon feature-icon--green">
+                <FiTrendingUp className="feature-icon-svg" />
+              </div>
               <h3 className="feature-title">트렌드 분석</h3>
               <p className="feature-description">
                 최신 이슈의 흐름을 파악하고 뉴스 보도의 패턴을 인사이트로 제공합니다
               </p>
             </div>
+
             <div className="feature-card">
-              <div className="feature-icon">🔔</div>
+              <div className="feature-icon feature-icon--orange">
+                <FiBell className="feature-icon-svg" />
+              </div>
               <h3 className="feature-title">실시간 업데이트</h3>
               <p className="feature-description">
                 실시간 뉴스 업데이트와 맞춤형 알림으로 필요한 정보를 바로 확인하세요
