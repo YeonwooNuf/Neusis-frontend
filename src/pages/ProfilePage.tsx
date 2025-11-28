@@ -1,11 +1,10 @@
-// src/pages/ProfilePage.tsx
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserStats } from '../types/user';
 import PageContainer from '../components/PageContainer';
 import CalendarModal from '../components/modals/CalendarModal';
+import { useTheme } from '../contexts/ThemeContext';
 import './ProfilePage.css';
 
 const API_BASE_URL =
@@ -32,6 +31,7 @@ const ProfilePage = () => {
   const [readDates, setReadDates] = useState<string[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const { theme, toggleTheme } = useTheme();
 
   // 유저가 없으면 로그인 페이지로 이동
   useEffect(() => {
@@ -262,7 +262,11 @@ const ProfilePage = () => {
                   </p>
                 </div>
                 <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
+                  <input
+                    type="checkbox"
+                    checked={theme === 'dark'}
+                    onChange={toggleTheme}
+                  />
                   <span className="toggle-slider"></span>
                 </label>
               </div>
@@ -270,12 +274,14 @@ const ProfilePage = () => {
               <div className="setting-item">
                 <div className="setting-info">
                   <h3 className="setting-name">Dark Mode</h3>
-                  <p className="setting-description">
-                    Switch to dark theme
-                  </p>
+                  <p className="setting-description">Switch to dark theme</p>
                 </div>
                 <label className="toggle-switch">
-                  <input type="checkbox" />
+                  <input
+                    type="checkbox"
+                    checked={theme === 'dark'}
+                    onChange={toggleTheme}
+                  />
                   <span className="toggle-slider"></span>
                 </label>
               </div>
