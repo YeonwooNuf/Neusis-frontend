@@ -147,6 +147,95 @@
   border-radius: 6px;
 }
 
+/* NewsListPage 다크모드 스타일 */
+:root[data-theme='dark'] .news-list-page {
+  color: var(--text-primary);
+}
+
+/* 헤더 텍스트 */
+:root[data-theme='dark'] .page-title {
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] .page-subtitle {
+  color: var(--text-secondary);
+}
+
+/* 검색 인풋 & 날짜 필터 */
+:root[data-theme='dark'] .search-input {
+  background-color: var(--background);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+:root[data-theme='dark'] .search-input::placeholder {
+  color: var(--text-secondary);
+}
+
+:root[data-theme='dark'] .date-filters input[type='date'] {
+  background-color: var(--background);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+/* 카테고리 필터 버튼 */
+:root[data-theme='dark'] .filter-btn {
+  background-color: var(--background);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}
+
+:root[data-theme='dark'] .filter-btn:hover {
+  background-color: var(--background-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+:root[data-theme='dark'] .filter-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+/* 뉴스 카드 컨테이너 비었을 때 */
+:root[data-theme='dark'] .no-results {
+  color: var(--text-secondary);
+}
+
+/* 페이지네이션 버튼 */
+:root[data-theme='dark'] .page-btn {
+  background-color: var(--background);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+:root[data-theme='dark'] .page-btn:hover:not(:disabled) {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
+:root[data-theme='dark'] .page-btn:disabled {
+  opacity: 0.4;
+}
+
+/* 페이지 번호 버튼 */
+:root[data-theme='dark'] .page-number-btn {
+  background-color: var(--background);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+:root[data-theme='dark'] .page-number-btn:hover {
+  background-color: var(--background-light);
+}
+
+:root[data-theme='dark'] .page-number-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border-color: var(--primary-color);
+}
+
 @media (max-width: 768px) {
   .page-title {
     font-size: 2rem;
