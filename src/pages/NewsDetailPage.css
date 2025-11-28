@@ -68,7 +68,8 @@
 .article-meta-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;     /* ← 원문 버튼과 높이 맞춤 */
+  align-items: center;
+  /* ← 원문 버튼과 높이 맞춤 */
   gap: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
@@ -349,8 +350,10 @@
 /* 헤더 오른쪽(날짜 + 북마크 + 원문보기) */
 .article-header-right {
   display: flex;
-  flex-direction: column;   /* 세로 정렬 */
-  align-items: flex-end;    /* 오른쪽 정렬 */
+  flex-direction: column;
+  /* 세로 정렬 */
+  align-items: flex-end;
+  /* 오른쪽 정렬 */
   gap: 0.4rem;
 }
 
@@ -398,6 +401,38 @@
 
 .article-original-link:hover {
   background-color: #f3f4f6;
+}
+
+.analysis-action-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.analysis-action-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.analysis-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #d1d5db;
+  border-top: 3px solid #111827;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
 
 /* 반응형 */
@@ -451,4 +486,26 @@
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.analysis-loading-text {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.analysis-action-btn {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
 }
