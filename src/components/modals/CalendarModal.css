@@ -131,3 +131,67 @@
 .legend-dot.holiday {
   background: #e53935;
 }
+
+/* 🌙 다크모드 적용 */
+:root[data-theme='dark'] .calendar-modal {
+  background: var(--background);
+  color: var(--text-primary);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+:root[data-theme='dark'] .calendar-header button {
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] .calendar-table th {
+  color: var(--text-secondary);
+}
+
+:root[data-theme='dark'] .calendar-day {
+  color: var(--text-primary);
+}
+
+/* 일요일 */
+:root[data-theme='dark'] .calendar-day.sun {
+  color: #ff6b6b;
+}
+
+/* 토요일 */
+:root[data-theme='dark'] .calendar-day.sat {
+  color: #4dabf7;
+}
+
+/* 공휴일 */
+:root[data-theme='dark'] .calendar-day.holiday {
+  color: #ff6b6b;
+}
+
+/* 출석한 날(읽은 날) */
+:root[data-theme='dark'] .calendar-day.read-day {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+/* 배경 */
+:root[data-theme='dark'] .calendar-backdrop {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+/* 레전드 */
+:root[data-theme='dark'] .legend {
+  color: var(--text-secondary);
+}
+
+:root[data-theme='dark'] .legend-dot.attended {
+  background: var(--primary-color);
+}
+
+:root[data-theme='dark'] .legend-dot.holiday {
+  background: #ff6b6b;
+}
+
+/* 닫기 버튼 */
+:root[data-theme='dark'] .calendar-close-btn {
+  background: var(--background-light);
+  color: var(--text-primary);
+}
