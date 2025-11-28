@@ -31,6 +31,35 @@ body {
   line-height: 1.6;
 }
 
+/* 다크모드 테마 변수 */
+:root[data-theme='dark'] {
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+
+  --secondary-color: #94a3b8;
+
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+
+  --background: #0f172a;        /* 전체 배경 */
+  --background-light: #1e293b;  /* 카드/컴포넌트 배경 */
+
+  --border-color: #334155;
+
+  --shadow-sm: 0 1px 2px 0 rgba(255, 255, 255, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(255, 255, 255, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(255, 255, 255, 0.12);
+
+  --border-radius: 8px;
+  --transition: all 0.3s ease;
+}
+
+/* body가 자동적으로 바뀌도록 */
+body[data-theme='dark'] {
+  background-color: var(--background-light);
+  color: var(--text-primary);
+}
+
 #root {
   min-height: 100vh;
 }
