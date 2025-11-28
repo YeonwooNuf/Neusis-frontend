@@ -33,6 +33,12 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const { theme, toggleTheme } = useTheme();
 
+  // 이메일 알림 설정 상태
+  const [emailNotifications, setEmailNotifications] = useState<boolean>(true);
+
+  // 주간 요약 설정 상태
+  const [weeklyDigest, setWeeklyDigest] = useState<boolean>(true);
+
   // 유저가 없으면 로그인 페이지로 이동
   useEffect(() => {
     if (!user) {
@@ -264,8 +270,10 @@ const ProfilePage = () => {
                 <label className="toggle-switch">
                   <input
                     type="checkbox"
-                    checked={theme === 'dark'}
-                    onChange={toggleTheme}
+                    checked={emailNotifications}
+                    onChange={() =>
+                      setEmailNotifications(prev => !prev)
+                    }
                   />
                   <span className="toggle-slider"></span>
                 </label>
@@ -294,7 +302,13 @@ const ProfilePage = () => {
                   </p>
                 </div>
                 <label className="toggle-switch">
-                  <input type="checkbox" defaultChecked />
+                  <input
+                    type="checkbox"
+                    checked={weeklyDigest}
+                    onChange={() =>
+                      setWeeklyDigest(prev => !prev)
+                    }
+                  />
                   <span className="toggle-slider"></span>
                 </label>
               </div>
