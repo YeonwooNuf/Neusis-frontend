@@ -39,6 +39,9 @@ const NewsDetailPage = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
+  // 분석 요청 로딩 상태
+  const [analyzeLoading, setAnalyzeLoading] = useState(false);
+
   // 1) 기사 상세 조회
   useEffect(() => {
     if (!id) return;
@@ -155,6 +158,41 @@ const NewsDetailPage = () => {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const handleAnalyze = async () => {
+    if (!id) return;
+
+    try {
+      setAnalyzeLoading(true);
+
+      // 서버 처리 되기 전에 프론트에서는 분석 대기중으로 표시
+      setArticle((prev) =>
+        prev ? { ...prev, ingestStatus: 'PENDING' } : prev,
+      );
+
+      const res = await fetch(`${API_BASE_URL}/articles/${id}/analyze`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!res.ok) {
+        throw new Error('분석 요청에 실패했습니다.');
+      }
+
+      // 백엔드에서 업데이트된 ArticleDto를 다시 보내줘야함
+      // Loading 상태 변화 시 api 호출하는 형식으로 해야할 듯?
+      const updated: ArticleDto = await res.json();
+      setArticle(updated);
+    } catch (e) {
+      console.error('분석 요청 실패', e);
+      // 실패 상태 표시
+      setArticle((prev) =>
+        prev ? { ...prev, ingestStatus: 'FAILED' } : prev,
+      );
+    } finally {
+      setAnalyzeLoading(false);
+    }
   };
 
   if (loading) {
@@ -290,6 +328,7 @@ const NewsDetailPage = () => {
 
           {analysis ? (
             <>
+              {/* ===== 분석 결과 존재: 기존 화면 유지 ===== */}
               <div className="analysis-summary">
                 <h3 className="analysis-subtitle">요약</h3>
                 <p className="analysis-summary-text">
@@ -328,9 +367,7 @@ const NewsDetailPage = () => {
                     <div
                       className="trend-score-fill"
                       style={{
-                        width: `${analysis.trendScore != null
-                          ? analysis.trendScore * 100
-                          : 0
+                        width: `${analysis.trendScore != null ? analysis.trendScore * 100 : 0
                           }%`,
                       }}
                     ></div>
@@ -362,9 +399,29 @@ const NewsDetailPage = () => {
               </div>
             </>
           ) : (
-            <p className="analysis-placeholder">
-              아직 이 기사에 대한 분석 결과가 없습니다.
-            </p>
+            <>
+              {/* ===== 분석 결과 없음 ===== */}
+              <p className="analysis-placeholder">
+                아직 이 기사에 대한 분석 결과가 없습니다.
+              </p>
+
+              {analyzeLoading ? (
+                // --- 로딩 스피너 ---
+                <div className="analysis-spinner-container">
+                  <div className="spinner"></div>
+                  <p className="analysis-loading-text">AI가 분석 중입니다...</p>
+                </div>
+              ) : (
+                // --- 분석하기 버튼 ---
+                <button
+                  type="button"
+                  className="analysis-action-btn"
+                  onClick={handleAnalyze}
+                >
+                  이 기사 AI로 분석하기
+                </button>
+              )}
+            </>
           )}
         </section>
       </div>
