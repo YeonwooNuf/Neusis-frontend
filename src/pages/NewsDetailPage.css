@@ -254,6 +254,14 @@
   background: #f44336;
 }
 
+.sentiment-hopeful {
+  background: #42a5f5; /* 밝은 파란 느낌 → 희망적 */
+}
+
+.sentiment-anxious {
+  background: #ff9800; /* 경고·불안 느낌의 주황 */
+}
+
 /* 트렌드 점수 바 */
 .trend-score-bar {
   width: 100%;

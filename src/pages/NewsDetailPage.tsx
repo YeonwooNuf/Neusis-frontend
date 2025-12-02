@@ -25,6 +25,8 @@ const sentimentLabels: Record<string, string> = {
   POSITIVE: '긍정적',
   NEGATIVE: '부정적',
   NEUTRAL: '중립적',
+  HOPEFUL: '희망적',
+  ANXIOUS: '걱정됨',
 };
 
 const NewsDetailPage = () => {

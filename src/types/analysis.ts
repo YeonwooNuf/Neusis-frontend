@@ -1,4 +1,4 @@
-export type Sentiment = 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
+export type Sentiment = 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE' | 'HOPEFUL' | 'ANXIOUS';
 
 export interface AnalysisDto {
   resultId: number;
