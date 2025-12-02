@@ -37,4 +37,5 @@ export interface ArticleDto {
   viewCount?: number;
   ingestStatus: IngestStatus;
   analysis?: AnalysisDto | null;
+  trendScore: number | null;
 }

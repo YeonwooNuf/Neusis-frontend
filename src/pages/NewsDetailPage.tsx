@@ -358,8 +358,8 @@ const NewsDetailPage = () => {
                   <div className="metric-header">
                     <span className="metric-label">트렌드 점수</span>
                     <span className="trend-score-value">
-                      {analysis.trendScore != null
-                        ? `${(analysis.trendScore * 100).toFixed(0)}%`
+                      {article.trendScore != null
+                        ? `${(article.trendScore * 100).toFixed(0)}%`
                         : 'N/A'}
                     </span>
                   </div>
@@ -367,7 +367,7 @@ const NewsDetailPage = () => {
                     <div
                       className="trend-score-fill"
                       style={{
-                        width: `${analysis.trendScore != null ? analysis.trendScore * 100 : 0
+                        width: `${article.trendScore != null ? article.trendScore * 100 : 0
                           }%`,
                       }}
                     ></div>

@@ -6,7 +6,6 @@ export interface AnalysisDto {
   summary: string;
   sentiment: Sentiment;
   keywords: string[];
-  trendScore: number | null;
   processedAt: string | null;
   createdAt: string;
 }
