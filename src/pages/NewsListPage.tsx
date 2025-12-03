@@ -133,7 +133,7 @@ const NewsListPage = () => {
         <div className="news-list-header">
           <h1 className="page-title">News Articles</h1>
           <p className="page-subtitle">
-            Browse and analyze articles from your Neusis dataset
+            Neusis에 수집된 뉴스들을 탐색하고 분석해보세요
           </p>
         </div>
 
