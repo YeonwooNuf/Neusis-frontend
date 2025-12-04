@@ -135,6 +135,12 @@
   gap: 1.5rem;
 }
 
+.empty-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 .setting-item {
   display: flex;
   justify-content: space-between;
