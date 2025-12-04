@@ -127,6 +127,8 @@
   font-weight: 500;
   font-size: 0.9375rem;
   border: 1px solid var(--primary-color);
+  min-width: 120px;   /* 글자 수 달라도 최소 폭 통일 */
+  text-align: center; /* 가운데 정렬 */
 }
 
 .settings-list {
