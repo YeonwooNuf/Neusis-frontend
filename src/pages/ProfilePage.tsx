@@ -264,7 +264,7 @@ const ProfilePage = () => {
                 <div className="setting-info">
                   <h3 className="setting-name">Email Notifications</h3>
                   <p className="setting-description">
-                    Receive updates about new articles
+                    새로운 기사 업데이트에 대한 알림을 메일로 받아보세요.
                   </p>
                 </div>
                 <label className="toggle-switch">
@@ -281,8 +281,8 @@ const ProfilePage = () => {
 
               <div className="setting-item">
                 <div className="setting-info">
-                  <h3 className="setting-name">Dark Mode</h3>
-                  <p className="setting-description">Switch to dark theme</p>
+                  <h3 className="setting-name">Switch theme</h3>
+                  <p className="setting-description">페이지 테마를 전환하여보세요.</p>
                 </div>
                 <label className="toggle-switch">
                   <input
@@ -298,7 +298,7 @@ const ProfilePage = () => {
                 <div className="setting-info">
                   <h3 className="setting-name">Weekly Digest</h3>
                   <p className="setting-description">
-                    Get weekly summary of top articles
+                    금주 인기 기사의 요약을 확인하여보세요.
                   </p>
                 </div>
                 <label className="toggle-switch">
