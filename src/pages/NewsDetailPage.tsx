@@ -118,7 +118,45 @@ const NewsDetailPage = () => {
     fetchLikeStatus();
   }, [id, isAuthenticated, user]);
 
-  // 4) 북마크 토글 핸들러
+  // 4) 분석 결과 자동 반영을 위한 폴링
+  useEffect(() => {
+    if (!id) return;
+    if (!article) return;
+
+    // 완료 상태인데 아직 analysis가 비어있으면 폴링 시작
+    const shouldPoll =
+      (article.ingestStatus === 'ANALYZED' && !article.analysis);
+
+    if (!shouldPoll) return;
+
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/articles/${id}`, {
+          credentials: 'include',
+        });
+
+        if (!res.ok) {
+          console.error('분석 폴링 중 기사 조회 실패');
+          return;
+        }
+
+        const updated: ArticleDto = await res.json();
+        setArticle(updated);
+
+        // ingestStatus = ANALYZED && analysis 가 채워지면 폴링 종료
+        if (updated.ingestStatus === 'ANALYZED' && updated.analysis) {
+          clearInterval(intervalId);
+        }
+      } catch (e) {
+        console.error('분석 결과 폴링 실패', e);
+      }
+    }, 100); // 0.1초마다 조회
+
+    // 컴포넌트 언마운트 / deps 변경 시 정리
+    return () => clearInterval(intervalId);
+  }, [id, article?.ingestStatus, article?.analysis]);
+
+  // 5) 북마크 토글 핸들러
   const handleToggleBookmark = async () => {
     if (!id || !isAuthenticated || !user) {
       alert('로그인 후 북마크를 사용할 수 있습니다.');
