@@ -12,17 +12,70 @@ const HomePage = () => {
     <PageContainer>
       <div className="home-page">
         <section className="hero-section">
-          <h1 className="hero-title">Welcome to Neusis</h1>
-          <p className="hero-subtitle">
-            데이터 기반 인사이트를 제공하는 뉴스 분석 플랫폼
-          </p>
-          <div className="hero-actions">
-            <a href="/news" className="btn btn-primary">
-              뉴스 탐색하기
-            </a>
-            <a href="/profile" className="btn btn-secondary">
-              프로필 보기
-            </a>
+          <div className="hero-inner">
+            {/* 왼쪽 텍스트 영역 */}
+            <div className="hero-content">
+              <h1 className="hero-title">Welcome to Neusis</h1>
+              <p className="hero-subtitle">
+                데이터 기반 인사이트를 제공하는 뉴스 분석 플랫폼
+              </p>
+              <div className="hero-actions">
+                <a href="/news" className="btn btn-primary">
+                  뉴스 탐색하기
+                </a>
+                <a href="/profile" className="btn btn-secondary">
+                  프로필 보기
+                </a>
+              </div>
+
+              <div className="hero-metrics">
+                <div className="hero-metric-item">
+                  <span className="hero-metric-label">오늘 분석된 기사</span>
+                  <span className="hero-metric-value">1,248+</span>
+                </div>
+                <div className="hero-metric-item">
+                  <span className="hero-metric-label">모니터링 중인 키워드</span>
+                  <span className="hero-metric-value">320</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 오른쪽 비주얼 카드 영역 */}
+            <div className="hero-visual">
+              <div className="hero-card">
+                <div className="hero-card-header">
+                  <span className="hero-card-title">오늘의 이슈 트렌드</span>
+                  <span className="hero-card-badge">Live</span>
+                </div>
+
+                <div className="hero-card-chart">
+                  <div className="hero-bar-group">
+                    <div className="hero-bar-label">경제</div>
+                    <div className="hero-bar hero-bar--1" />
+                    <span className="hero-bar-value">42%</span>
+                  </div>
+                  <div className="hero-bar-group">
+                    <div className="hero-bar-label">정치</div>
+                    <div className="hero-bar hero-bar--2" />
+                    <span className="hero-bar-value">28%</span>
+                  </div>
+                  <div className="hero-bar-group">
+                    <div className="hero-bar-label">IT/과학</div>
+                    <div className="hero-bar hero-bar--3" />
+                    <span className="hero-bar-value">18%</span>
+                  </div>
+                  <div className="hero-bar-group">
+                    <div className="hero-bar-label">사회</div>
+                    <div className="hero-bar hero-bar--4" />
+                    <span className="hero-bar-value">12%</span>
+                  </div>
+                </div>
+
+                <div className="hero-card-footer">
+                  지난 24시간 기준 · 실시간 뉴스 데이터 기반
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
