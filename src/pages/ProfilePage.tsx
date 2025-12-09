@@ -262,25 +262,6 @@ const ProfilePage = () => {
             <div className="settings-list">
               <div className="setting-item">
                 <div className="setting-info">
-                  <h3 className="setting-name">Email Notifications</h3>
-                  <p className="setting-description">
-                    새로운 기사 업데이트에 대한 알림을 메일로 받아보세요.
-                  </p>
-                </div>
-                <label className="toggle-switch">
-                  <input
-                    type="checkbox"
-                    checked={emailNotifications}
-                    onChange={() =>
-                      setEmailNotifications(prev => !prev)
-                    }
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div className="setting-item">
-                <div className="setting-info">
                   <h3 className="setting-name">Switch theme</h3>
                   <p className="setting-description">페이지 테마를 전환하여보세요.</p>
                 </div>
@@ -307,6 +288,24 @@ const ProfilePage = () => {
                     checked={weeklyDigest}
                     onChange={() =>
                       setWeeklyDigest(prev => !prev)
+                    }
+                  />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <h3 className="setting-name">Email Notifications</h3>
+                  <p className="setting-description">
+                    새로운 기사 업데이트에 대한 알림을 메일로 받아보세요.
+                  </p>
+                </div>
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
+                    checked={emailNotifications}
+                    onChange={() =>
+                      setEmailNotifications(prev => !prev)
                     }
                   />
                   <span className="toggle-slider"></span>
