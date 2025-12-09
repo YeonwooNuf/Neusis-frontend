@@ -30,12 +30,12 @@ const HomePage = () => {
 
               <div className="hero-metrics">
                 <div className="hero-metric-item">
-                  <span className="hero-metric-label">오늘 분석된 기사</span>
-                  <span className="hero-metric-value">1,248+</span>
+                  <span className="hero-metric-label">오늘 저장된 기사</span>
+                  <span className="hero-metric-value">348</span>
                 </div>
                 <div className="hero-metric-item">
-                  <span className="hero-metric-label">모니터링 중인 키워드</span>
-                  <span className="hero-metric-value">320</span>
+                  <span className="hero-metric-label">오늘 분석된 기사</span>
+                  <span className="hero-metric-value">47</span>
                 </div>
               </div>
             </div>
