@@ -190,7 +190,7 @@ const HomePage = () => {
               <div className="feature-icon feature-icon--green">
                 <FiTrendingUp className="feature-icon-svg" />
               </div>
-              <h3 className="feature-title">트렌드 분석</h3>
+              <h3 className="feature-title">트렌드 이슈</h3>
               <p className="feature-description">
                 최신 이슈의 흐름을 파악하고 뉴스 보도의 패턴을 인사이트로 제공합니다
               </p>
@@ -200,9 +200,9 @@ const HomePage = () => {
               <div className="feature-icon feature-icon--orange">
                 <FiBell className="feature-icon-svg" />
               </div>
-              <h3 className="feature-title">실시간 업데이트</h3>
+              <h3 className="feature-title">실시간 분석</h3>
               <p className="feature-description">
-                실시간 뉴스 업데이트와 맞춤형 알림으로 필요한 정보를 바로 확인하세요
+                기사의 키워드와 감정을 실시간으로 분석하고 트렌드 점수를 제공합니다
               </p>
             </div>
           </div>
