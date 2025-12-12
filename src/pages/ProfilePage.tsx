@@ -295,9 +295,9 @@ const ProfilePage = () => {
               </div>
               <div className="setting-item">
                 <div className="setting-info">
-                  <h3 className="setting-name">Email Notifications</h3>
+                  <h3 className="setting-name">Tracking Attendance</h3>
                   <p className="setting-description">
-                    새로운 기사 업데이트에 대한 알림을 메일로 받아보세요.
+                    출석 정보를 저장하고 연속 출석 일 수를 확인하세요.
                   </p>
                 </div>
                 <label className="toggle-switch">
