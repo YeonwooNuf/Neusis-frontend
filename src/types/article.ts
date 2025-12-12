@@ -39,3 +39,15 @@ export interface ArticleDto {
   analysis?: AnalysisDto | null;
   trendScore: number | null;
 }
+
+export interface ArticleListDto {
+  articleId: number;
+  title: string;
+  source: string | null;
+  publishedAt: string | null;
+  category: Category;
+  summary: string | null;
+  contentPreview: string | null;
+  isRead: boolean;
+  isLiked: boolean;
+}
