@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import PageContainer from '../components/PageContainer';
 import NewsCard from '../components/NewsCard';
 import './NewsListPage.css';
-import type { ArticleDto, PageResponse } from '../types/article';
+import type { ArticleListDto, PageResponse } from '../types/article';
 import { useAuth } from '../contexts/AuthContext';
 
 const API_BASE_URL =
@@ -89,25 +89,21 @@ const NewsListPage = () => {
           throw new Error('Failed to fetch articles');
         }
 
-        const pageData: PageResponse<ArticleDto> = await res.json();
+        const raw = await res.json();
+        const pageData: PageResponse<ArticleListDto> = raw;
 
         // ingestStatus로 추가 필터링이 필요 없다면 그대로 사용
         const filteredByStatus = pageData.content;
-        // 만약 PENDING / ANALYZED만 보고싶으면 아래처럼:
-        // const filteredByStatus = pageData.content.filter(
-        //   (a) => a.ingestStatus === 'PENDING' || a.ingestStatus === 'ANALYZED',
-        // );
 
-        const mapped: NewsItem[] = filteredByStatus.map((a) => ({
+        const mapped: NewsItem[] = pageData.content.map((a) => ({
           id: String(a.articleId),
           title: a.title,
-          summary: a.content
-            ? a.content.length > 150
-              ? a.content.slice(0, 150) + '...'
-              : a.content
-            : '',
+
+          // 분석 완료면 summary, 아니면 contentPreview(앞 20자)
+          summary: (a.contentPreview ?? '').trim(),
+
           source: a.source ?? 'Unknown',
-          publishedAt: a.publishedAt ?? a.createdAt,
+          publishedAt: a.publishedAt ?? '',
           category: a.category,
         }));
 
